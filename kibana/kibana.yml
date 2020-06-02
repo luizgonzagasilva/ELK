@@ -1,0 +1,5 @@
+server.name: kibana
+server.host: "0"
+xpack.monitoring.ui.container.elasticsearch.enabled: false
+#opendistro_security.multitenancy.enabled: false
+elasticsearch.ssl.verificationMode: none

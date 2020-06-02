@@ -1,0 +1,67 @@
+#=========================== Filebeat inputs =============================
+
+filebeat.inputs:
+
+- type: log
+
+  # Change to true to enable this input configuration.
+  enabled: true
+
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+    - /sample-logs/alcd-processar-dados-transacao-java.jar*.txt
+  
+  fields:
+    topic_name: app_logs
+    
+    
+- type: log
+
+  # Change to true to enable this input configuration.
+  enabled: true
+
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+    - /sample-logs/request*.log
+  
+  fields:
+    topic_name: request_logs
+    
+    
+#============================= Filebeat modules ===============================
+
+filebeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+  # Period on which files under path should be checked for changes
+  reload.period: 10s
+
+#==================== Elasticsearch template setting ==========================
+
+setup.template.settings:
+  index.number_of_shards: 2
+  #index.codec: best_compression
+  #_source.enabled: false
+
+
+#================================ Outputs =====================================
+
+#------------------------------- Kafka output ---------------------------------
+output.kafka:
+  # The list of Kafka broker addresses from which to fetch the cluster metadata.
+  hosts: ["${KAFKA_HOST1}", "${KAFKA_HOST2}"]
+  
+  # The Kafka topic used for produced events. 
+  topic: '%{[fields.topic_name]}'
+  
+  # Configure JSON encoding
+  codec.json:
+    # Pretty-print JSON event
+    pretty: false
+    
+    
+    

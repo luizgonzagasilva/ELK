@@ -1,0 +1,31 @@
+version: '3.2'
+services:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.5.2
+    environment:
+      - ELASTIC_HOST1=elasticsearch1:9200
+      - ELASTIC_HOST2=elasticsearch2:9200
+      - ELASTIC_HOST3=elasticsearch3:9200
+      - KAFKA_HOST1=kafka1:9092
+      - KAFKA_HOST2=kafka2:9092
+    volumes:
+      - "./logstash.conf:/config-dir/logstash.conf"
+      - "./etc/Sao_Paulo:/etc/localtime:ro" 
+    restart: always
+    command: logstash -w 1 -f /config-dir/logstash.conf
+    ports:
+      - "9600:9600"
+      - "7777:7777"
+    networks:
+      - elastic
+    external_links:
+      - kafka1:kafka1
+      - kafka2:kafka2
+      - elasticsearch1:elasticsearch1
+      - elasticsearch2:elasticsearch2
+      - elasticsearch3:elasticsearch3
+      
+      
+networks:
+    elastic:
+        external: true

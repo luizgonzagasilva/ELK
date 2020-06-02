@@ -1,0 +1,22 @@
+version: '3.2'
+services:
+ filebeat:
+    image: docker.elastic.co/beats/filebeat:7.5.2
+    environment:
+      - KAFKA_HOST1=kafka1:9092
+      - KAFKA_HOST2=kafka2:9092
+    volumes:
+      - "./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "./sample-logs:/sample-logs"
+      - "./etc/Sao_Paulo:/etc/localtime:ro" 
+    networks:
+      - elastic
+    external_links:
+      - kafka1:kafka1
+      - kafka2:kafka2
+
+networks:
+    elastic:
+        external: true
+
+
